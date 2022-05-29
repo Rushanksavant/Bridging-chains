@@ -35,6 +35,10 @@ contract BridgeBase {
         token = ITokenBase(_token);
     }
 
+    function getNonce(uint256 _nonce) external view returns (bool) {
+        return (caller_txnNonce[msg.sender][_nonce]);
+    }
+
     function burn(
         address to,
         uint256 amount,
@@ -95,7 +99,7 @@ contract BridgeBase {
         return (v, r, s);
     }
 
-    function getSigner(bytes32 message, bytes calldata signature)
+    function getSigner(bytes32 message, bytes memory signature)
         internal
         pure
         returns (address)

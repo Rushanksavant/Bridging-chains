@@ -21,11 +21,10 @@ contract BridgeBase {
     }
 
     event Transfer(
-        address from,
-        address to,
+        address indexed to,
         uint256 amount,
         uint256 date,
-        uint256 nonce,
+        uint256 indexed nonce,
         bytes signature,
         Step indexed step
     );
@@ -40,13 +39,11 @@ contract BridgeBase {
     }
 
     function burn(
-        address to,
         uint256 amount,
         uint256 nonce,
         bytes calldata signature
     ) external {
-        // check if txn already executed
-        require(!caller_txnNonce[msg.sender][nonce], "txn already executed");
+        require(!caller_txnNonce[msg.sender][nonce], "txn already executed"); // check if txn already execute
 
         caller_txnNonce[msg.sender][nonce] = true;
 
@@ -54,7 +51,6 @@ contract BridgeBase {
 
         emit Transfer(
             msg.sender,
-            to,
             amount,
             block.timestamp,
             nonce,
@@ -63,29 +59,42 @@ contract BridgeBase {
         );
     }
 
-    // following functions are to verify signature
-    //------------------------------------------------------------------------------------------------------//
-    function prefix(bytes32 _hash) internal pure returns (bytes32) {
-        return
-            keccak256(
-                abi.encodePacked("\x19Ethereum Signed Message:\n32", _hash)
-            );
+    function mint(
+        uint256 amount,
+        uint256 nonce,
+        bytes calldata signature
+    ) external {
+        address to = msg.sender;
+        require(
+            verifySignature(to, amount, nonce, signature) == to,
+            "Invalid signature"
+        );
+        require(!caller_txnNonce[to][nonce], "txn already executed");
+
+        caller_txnNonce[to][nonce] = true;
+
+        token.mint(to, amount);
+
+        emit Transfer(to, amount, block.timestamp, nonce, signature, Step.Mint);
     }
 
-    function splitSignature(bytes memory signature)
-        internal
-        pure
-        returns (
-            uint8,
-            bytes32,
-            bytes32
-        )
-    {
-        require(signature.length == 65, "Invalid signature");
+    // to verify signature
+    function verifySignature(
+        address to,
+        uint256 amount,
+        uint256 nonce,
+        bytes memory signature
+    ) internal pure returns (address) {
+        require(signature.length == 65, "Invalid signature size");
 
         bytes32 r;
         bytes32 s;
         uint8 v;
+
+        bytes32 _hash = keccak256(abi.encodePacked(to, amount, nonce));
+        bytes32 message = keccak256(
+            abi.encodePacked("\x19Ethereum Signed Message:\n32", _hash)
+        );
 
         assembly {
             // first 32 bytes, after the length prefix
@@ -96,51 +105,6 @@ contract BridgeBase {
             v := byte(0, mload(add(signature, 96)))
         }
 
-        return (v, r, s);
-    }
-
-    function getSigner(bytes32 message, bytes memory signature)
-        internal
-        pure
-        returns (address)
-    {
-        bytes32 r;
-        bytes32 s;
-        uint8 v;
-
-        (v, r, s) = splitSignature(signature);
-
         return ecrecover(message, v, r, s);
-    }
-
-    //------------------------------------------------------------------------------------------------------//
-
-    function mint(
-        address from,
-        address to,
-        uint256 amount,
-        uint256 nonce,
-        bytes calldata signature
-    ) external {
-        bytes32 message = prefix(
-            keccak256(abi.encodePacked(from, to, amount, nonce))
-        );
-
-        require(getSigner(message, signature) == from, "Invalid signature");
-        require(!caller_txnNonce[from][nonce], "txn already executed");
-
-        caller_txnNonce[from][nonce] = true;
-
-        token.mint(to, amount);
-
-        emit Transfer(
-            from,
-            to,
-            amount,
-            block.timestamp,
-            nonce,
-            signature,
-            Step.Mint
-        );
     }
 }

@@ -51,11 +51,14 @@ function App() {
     const provider = new ethers.providers.Web3Provider(connection)
     const signer = provider.getSigner()
 
-    let nonce = 1
+    let nonce = 2
     const message = ethers.utils.solidityKeccak256(['address', 'address', 'uint256', 'uint256'],
-      [account, account, amount, nonce])
+      [account, account, amount, nonce]).toString('hex')
 
-    const sig = await signer.signMessage(message)
+
+
+    const sig = await signer.signMessage(ethers.utils.arrayify(message))
+    console.log(sig)
     setSignature(sig)
   }
 
@@ -69,7 +72,7 @@ function App() {
     const BridgeBSC = new ethers.Contract(contractAddresses.Bridge_on_Bsc, Bridge_on_Bnb.abi, signer)
 
     console.log(account, signature)
-    const transaction = await BridgeETH.burn(account, amount, 1, signature)
+    const transaction = await BridgeETH.burn(account, amount, 2, signature)
 
     await transaction.wait()
   }
@@ -84,7 +87,7 @@ function App() {
     const BridgeBSC = new ethers.Contract(contractAddresses.Bridge_on_Bsc, Bridge_on_Bnb.abi, signer)
 
     console.log(account, signature)
-    const transaction = await BridgeBSC.mint(account, account, amount, 1, signature)
+    const transaction = await BridgeBSC.mint(account, account, amount, 2, signature)
 
     await transaction.wait()
   }

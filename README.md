@@ -18,7 +18,7 @@ Let's understand with an example: <br>
 <br>
 
 ## How can someone use this? 
-- I have developed a Dapp that allows user to use this bridge. Link
+- I have developed a Dapp that allows user to use this bridge. Link: https://bridge-eth-bsc.netlify.app/
 - You can email me your ETH/BSC address at rssavant34@gmail.com
 - I will transfer some BTT to your address so that you can play around with the bridge. 
 

@@ -30,8 +30,9 @@ function App() {
   // ------------------------------------------------------------
 
 
-  // to connect metamask and get address (can be used on all chains)
-  async function connect() {
+  // Following functions can be used on all chains
+  // --------------------------------------------------------------------------------------------------------------------------
+  async function connect() { // to connect metamask and get address 
     try {
       // connecting...
       const web3Modal = new Web3Modal()
@@ -46,23 +47,7 @@ function App() {
 
   }
 
-  // From ETH to BSC
-  // --------------------------------------------------------------------------------------------------------------------------
-  async function GetNonce_ETH() {  // 1
-    const web3Modal = new Web3Modal()
-    const connection = await web3Modal.connect()
-    const provider = new ethers.providers.Web3Provider(connection)
-
-    const BridgeETH = new ethers.Contract(contractAddresses.Bridge_on_Eth, Bridge_on_Eth.abi, provider)
-
-    let i = 0;
-    while (await BridgeETH.connect(account).getNonce(i)) {
-      i++
-    }
-    setNonce(i)
-  }
-
-  async function SignMessage_ETH(amount) {  // 2
+  async function SignMessage(amount) {  // to sign txn hash
     const web3Modal = new Web3Modal()
     const connection = await web3Modal.connect()
     const provider = new ethers.providers.Web3Provider(connection)
@@ -75,8 +60,27 @@ function App() {
     setSignature(sig)
     console.log(signature, nonce, amount)
   }
+  // --------------------------------------------------------------------------------------------------------------------------
 
-  async function burn_on_ETH(amount) { // 3
+
+
+  // From ETH to BSC
+  // --------------------------------------------------------------------------------------------------------------------------
+  async function GetNonce_ETH() {  // 1
+    const web3Modal = new Web3Modal()
+    const connection = await web3Modal.connect()
+    const provider = new ethers.providers.Web3Provider(connection)
+
+    const BridgeETH = new ethers.Contract(contractAddresses.Bridge_on_Eth, Bridge_on_Eth.abi, provider)
+
+    let i = 1;
+    while (await BridgeETH.connect(account).getNonce(i)) {
+      i++
+    }
+    setNonce(i)
+  }
+
+  async function burn_on_ETH(amount) { // 2
     const web3Modal = new Web3Modal()
     const connection = await web3Modal.connect()
     const provider = new ethers.providers.Web3Provider(connection)
@@ -91,7 +95,7 @@ function App() {
 
   }
 
-  async function queryETHevents() { // 4
+  async function queryETHevents() { // 3
     const web3Modal = new Web3Modal()
     const connection = await web3Modal.connect()
     const provider = new ethers.providers.Web3Provider(connection)
@@ -105,9 +109,10 @@ function App() {
     setAmount(ethers.utils.formatUnits(event[0]["args"][1].toString(), 'wei'))
     setNonce(parseInt(event[0]["args"][3].toString()))
     setSignature(event[0]["args"][4])
+    console.log(amount, nonce, signature)
   }
 
-  async function mint_on_BSC() { //5
+  async function mint_on_BSC() { // 4
     const web3Modal = new Web3Modal()
     const connection = await web3Modal.connect()
     const provider = new ethers.providers.Web3Provider(connection)
@@ -115,7 +120,7 @@ function App() {
 
     const BridgeBSC = new ethers.Contract(contractAddresses.Bridge_on_Bsc, Bridge_on_Bnb.abi, signer)
     console.log(amount, nonce, signature)
-    const transaction = await BridgeBSC.connect(signer).mint(amount, nonce, signature)
+    const transaction = await BridgeBSC.connect(signer).mint(ethers.utils.parseEther(amount), nonce, signature)
   }
   // --------------------------------------------------------------------------------------------------------------------------
 
@@ -123,6 +128,62 @@ function App() {
 
 
   // From BSC to ETH
+  // --------------------------------------------------------------------------------------------------------------------------
+  async function GetNonce_BSC() {  // 1
+    const web3Modal = new Web3Modal()
+    const connection = await web3Modal.connect()
+    const provider = new ethers.providers.Web3Provider(connection)
+
+    const BridgeBSC = new ethers.Contract(contractAddresses.Bridge_on_Bsc, Bridge_on_Bnb.abi, provider)
+
+    let i = 1; // dummy txn occupied nonce = 0
+    while (await BridgeBSC.connect(account).getNonce(i)) {
+      i++
+    }
+    setNonce(i)
+  }
+
+  async function burn_on_BSC(amount) { // 2
+    const web3Modal = new Web3Modal()
+    const connection = await web3Modal.connect()
+    const provider = new ethers.providers.Web3Provider(connection)
+    const signer = provider.getSigner()
+
+    const BridgeBSC = new ethers.Contract(contractAddresses.Bridge_on_Bsc, Bridge_on_Bnb.abi, signer)
+
+    // console.log(account, signature, nonce)
+
+    const transaction = await BridgeBSC.connect(signer).burn(amount, nonce, signature)
+    await transaction.wait()
+
+  }
+
+  async function queryBSCevents() { // 3
+    const web3Modal = new Web3Modal()
+    const connection = await web3Modal.connect()
+    const provider = new ethers.providers.Web3Provider(connection)
+    const signer = provider.getSigner()
+
+    const BridgeBSC = new ethers.Contract(contractAddresses.Bridge_on_Bsc, Bridge_on_Bnb.abi, provider)
+    const eventFilter = BridgeBSC.filters.Transfer(account, null, null, nonce, null, null)
+    const events = await BridgeBSC.connect(account).queryFilter(eventFilter)
+    setEvent(events)
+
+    setAmount(ethers.utils.formatUnits(event[0]["args"][1].toString(), 'wei'))
+    setNonce(parseInt(event[0]["args"][3].toString()))
+    setSignature(event[0]["args"][4])
+  }
+
+  async function mint_on_ETH() { // 4
+    const web3Modal = new Web3Modal()
+    const connection = await web3Modal.connect()
+    const provider = new ethers.providers.Web3Provider(connection)
+    const signer = provider.getSigner()
+
+    const BridgeETH = new ethers.Contract(contractAddresses.Bridge_on_Eth, Bridge_on_Eth.abi, signer)
+    console.log(amount, nonce, signature)
+    const transaction = await BridgeETH.connect(signer).mint(ethers.utils.parseEther(amount), nonce, signature)
+  }
   // --------------------------------------------------------------------------------------------------------------------------
 
 
@@ -149,10 +210,11 @@ function App() {
 
           <button className='bg-red-300 p-2 ml-2 rounded-lg hover:bg-red-500 hover:text-white flex'
             onClick={async () => {
-              await GetNonce_ETH() // txn nonce
-              await SignMessage_ETH(amount) // txn signature
+              GetNonce_ETH() // txn nonce
+              console.log(nonce)
+              await SignMessage(ethers.utils.parseEther(amount.toString())) // txn signature
 
-              await burn_on_ETH(amount)
+              await burn_on_ETH(ethers.utils.parseEther(amount.toString()))
               await queryETHevents()
             }}>
             <FaEthereum className='text-xl' /><span className='ml-1'>Send</span>
@@ -181,11 +243,12 @@ function App() {
 
           <button className='bg-red-300 p-2 ml-2 rounded-lg hover:bg-red-500 hover:text-white flex'
             onClick={async () => {
-              await GetNonce_ETH() // txn nonce
-              await SignMessage_ETH(amount) // txn signature
+              await GetNonce_BSC() // txn nonce
+              console.log(nonce)
+              await SignMessage(ethers.utils.parseEther(amount.toString())) // txn signature
 
-              await burn_on_ETH(amount)
-              await queryETHevents()
+              await burn_on_BSC(ethers.utils.parseEther(amount.toString()))
+              queryBSCevents()
             }}>
             <SiBinance className='text-xl' /><span className='ml-1'>Send</span>
           </button>
@@ -196,7 +259,7 @@ function App() {
 
           <button className='bg-red-300 p-2 ml-2 rounded-lg hover:bg-red-500 hover:text-white flex'
             onClick={async () => {
-              await mint_on_BSC()
+              await mint_on_ETH()
             }}>
             <FaEthereum className='text-xl' /><span className='ml-1'>Recieve</span>
           </button>

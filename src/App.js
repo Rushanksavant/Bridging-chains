@@ -273,6 +273,13 @@ function App() {
           </div>
         </div>
       </div>
+
+
+      <div className='ml-auto mr-[100px] mt-[50px] md:mt-[50px] md:ml-auto md:mr-[100px] text-[12px] md:text-[15px] lg:text-[17px] text-white'>
+        Mail me your ETH/BSC address to get some BTT<br></br>
+        Email - rssavant34@gmail.com
+      </div>
+      <div className='mt-2'></div>
     </div>
   );
 }

@@ -1,70 +1,23 @@
-# Getting Started with Create React App
+# Bridging-Chains ⛓
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### What is this about?
+Let's understand with an example:
+    - Bob holds some amount of XYZ token on Ethereum chain. And he isn't sure what to do with it 🤷‍♂️ 
+    - Let's say a Defi protocol (like Compound finance) gives an APR of 11% for the XYZ token on Ethereum blockchain. Bob is happy 🤑
+    - Now Bob discovered, on some other chain the APR is 20% for the same XYZ token. But how will Bob get his XYZ tokens to other chain from Ethereum? Bob is sad 😕
+    - A bridge is what Bob needs to get his tokens from Ethereum to some other chain. Bob is excited 🥳
 
-## Available Scripts
+### What I have done?
+    - Made an ERC20 compilent "Bridge Testing Token (BTT)"
+    - Developed a completely decentralized bridge between Ethereum (Ropsten) and Binance Smart Chain (BSC Testnet).
+    - BTT can be transfered effortlessly between the chains using this bridge.
+    - But wait, is this transferring free? Unfortunatly, no, user needs to pay the gas fees to execute transactions on blockchain.
 
-In the project directory, you can run:
+### How can someone use this? 
+    - I have developed a Dapp that allows user to use this bridge. Link
+    - You can email me your ETH/BSC address at rssavant34@gmail.com
+    - I will transfer some BTT to your address so that you can play around with the bridge. 
 
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Is this it?
+    - I also plan to make a ETH <-> BSC <-> Polygon bridge.
+    - The Polygon bridge can be integrated with the existing ETH <-> BSC bridge for BTT token, but there are some edge cases which needs to be taken into consideration.

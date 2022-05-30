@@ -206,9 +206,9 @@ function App() {
 
         {/* From ETH to BSC */}
         {/* -------------------------------------------------------------------------------------------------------------------------- */}
-        <div className='mx-auto flex mb-3'>
+        <div className='mx-auto justify-between flex mb-3 text-sm md:text-md lg:text-lg'>
 
-          <button className='bg-red-300 p-2 ml-2 rounded-lg hover:bg-red-500 hover:text-white flex'
+          <button className='bg-red-300 p-1 md:p-2 ml-2 rounded-lg hover:bg-red-500 hover:text-white flex'
             onClick={async () => {
               GetNonce_ETH() // txn nonce
               console.log(nonce)
@@ -220,11 +220,11 @@ function App() {
             <FaEthereum className='text-xl' /><span className='ml-1'>Send</span>
           </button>
 
-          <input className='h-[30px] md:h-[40px] rounded-lg ml-2 p-3 bg-indigo-100'
-            onChange={(event) => setAmount(event.target.value)} placeholder="Amount BTT (10^18)">
+          <input className='h-[30px] md:h-[40px] w-[100px] md:w-1/3 rounded-lg ml-2 p-3 bg-indigo-100'
+            onChange={(event) => setAmount(event.target.value)} placeholder="Amount BTT">
           </input>
 
-          <button className='bg-red-300 p-2 ml-2 rounded-lg hover:bg-red-500 hover:text-white flex'
+          <button className='bg-red-300 p-1 md:p-2 ml-2 rounded-lg hover:bg-red-500 hover:text-white flex'
             onClick={async () => {
               await mint_on_BSC()
             }}>
@@ -239,9 +239,9 @@ function App() {
 
         {/* From BSC to ETH */}
         {/* -------------------------------------------------------------------------------------------------------------------------- */}
-        <div className='mx-auto flex mt-2'>
+        <div className='mx-auto justify-between flex mt-2 text-sm md:text-md lg:text-lg'>
 
-          <button className='bg-red-300 p-2 ml-2 rounded-lg hover:bg-red-500 hover:text-white flex'
+          <button className='bg-red-300 p-1 md:p-2 ml-2 rounded-lg hover:bg-red-500 hover:text-white flex'
             onClick={async () => {
               await GetNonce_BSC() // txn nonce
               console.log(nonce)
@@ -253,8 +253,8 @@ function App() {
             <SiBinance className='text-xl' /><span className='ml-1'>Send</span>
           </button>
 
-          <input className='h-[30px] md:h-[40px] rounded-lg ml-2 p-3 bg-indigo-100'
-            onChange={(event) => setAmount(event.target.value)} placeholder="Amount BTT (10^18)">
+          <input className='h-[30px] md:h-[40px] w-[100px] md:w-1/3 rounded-lg ml-2 p-3 bg-indigo-100'
+            onChange={(event) => setAmount(event.target.value)} placeholder="Amount BTT">
           </input>
 
           <button className='bg-red-300 p-2 ml-2 rounded-lg hover:bg-red-500 hover:text-white flex'
@@ -267,9 +267,10 @@ function App() {
         </div>
         {/* -------------------------------------------------------------------------------------------------------------------------- */}
 
-        <div className='mx-auto ml-auto'>
-          {/* <span className='font-semibold'>BTT Balance: 100</span> */}
-
+        <div className='mx-auto text-red-600 mt-auto flex flex-row text-[10px] md:text-md lg:text-lg'>
+          <div>
+            <span className='font-bold text-[12px] md:text-[16px] lg:text-lg'>Note: </span> Please change your metamask connection to <span className='font-bold text-[12px] md:text-[16px] lg:text-lg'>Ropsten</span> and <span className='font-bold text-[12px] md:text-[16px] lg:text-lg'>BSC Testnet</span> while clicking respective buttons.
+          </div>
         </div>
       </div>
     </div>
